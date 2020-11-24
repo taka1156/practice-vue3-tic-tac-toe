@@ -1,10 +1,12 @@
 <template>
   <div>
-    <start-btn @start-click="init()"></start-btn>
+    <base-btn @btn-click="init()">
+      Start
+    </base-btn>
     <p class="game-msg" v-show="state.msg !== ''">{{ state.msg }}</p>
     <div v-if="state.pieces.length !== 0" class="game-frame">
       <div v-for="(piece, index) in state.pieces" :key="`cell_${index}`">
-        <game-cell :piece-no="index" :piece-mark="piece" @cell-click="writePlayer" />
+        <cell-btn :piece-no="index" :piece-mark="piece" @cell-click="writePlayer" />
       </div>
     </div>
   </div>
@@ -13,8 +15,8 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import { PieceType, PiecesType, GameStatusType, PlyerType } from '@/types/types';
-import StartBtn from '../molecules/StartBtn.vue';
-import GameCell from '../molecules/GameCell.vue';
+import BaseBtn from '../atoms/BaseBtn.vue';
+import CellBtn from '../molecules/CellBtn.vue';
 
 type FieldType = {
   pieces: PiecesType;
@@ -24,8 +26,8 @@ type FieldType = {
 export default defineComponent({
   name: 'GameFrame',
   components: {
-    'start-btn': StartBtn,
-    'game-cell': GameCell
+    'base-btn': BaseBtn,
+    'cell-btn': CellBtn
   },
   setup() {
     const state = reactive<FieldType>({
@@ -34,6 +36,7 @@ export default defineComponent({
     });
 
     const init = (): void => {
+      console.log('start');
       state.pieces = new Array(9).fill('n');
     };
 
@@ -109,6 +112,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
+::v-deep() .base-btn {
+  display: block;
+  margin: 0 auto;
+  height: 50px;
+  width: 150px;
+  padding: 10px;
+  border: 1px solid black;
+  font-size: 30px;
+}
+
 .game-msg {
   color: black;
 }

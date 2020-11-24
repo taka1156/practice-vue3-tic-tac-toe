@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-btn @on-click="cellClick">
+    <base-btn @btn-click="cellClick()">
       {{ cellValue(pieceMark) }}
     </base-btn>
   </div>
@@ -12,7 +12,7 @@ import { PieceType } from '@/types/types.d.ts';
 import BaseBtn from '../atoms/BaseBtn.vue';
 
 export default defineComponent({
-  name: 'BaseBtn',
+  name: 'CellBtn',
   components: {
     'base-btn': BaseBtn
   },
@@ -35,15 +35,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.base-btn {
-  display: block;
-  height: 50px;
-  width: 50px;
-  padding: 10px;
-  border: 1px solid black;
-  font-size: 30px;
-}
-
 ::v-deep() .base-btn {
   display: block;
   height: 50px;

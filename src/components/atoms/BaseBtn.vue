@@ -1,5 +1,5 @@
 <template>
-  <button type="button" class="base-btn" @click="onClick(pieceNo)">
+  <button type="button" class="base-btn" @click="btnClick">
     <slot />
   </button>
 </template>
@@ -9,12 +9,12 @@ import { defineComponent, SetupContext } from 'vue';
 
 export default defineComponent({
   name: 'BaseBtn',
-  setup(props, context: SetupContext) {
-    const onClick = (): void => {
-      context.emit('on-click');
+  setup(context: SetupContext) {
+    const btnClick = (): void => {
+      context.emit('btn-click');
     };
 
-    return { onClick };
+    return { btnClick };
   }
 });
 </script>
