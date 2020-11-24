@@ -1,9 +1,7 @@
 <template>
   <div>
-    <base-btn @on-click="onClick">
-      <template v-slot:btn-label>
-        {{ cellValue(pieceMark) }}
-      </template>
+    <base-btn @on-click="cellClick">
+      {{ cellValue(pieceMark) }}
     </base-btn>
   </div>
 </template>
@@ -23,15 +21,35 @@ export default defineComponent({
     pieceMark: String as PropType<PieceType>
   },
   setup(props, context: SetupContext) {
-    const onClick = (): void => {
-      context.emit('on-click', props.pieceNo);
+    const cellClick = (): void => {
+      context.emit('cell-click', props.pieceNo);
     };
 
-    const cellValue = (v: PieceType) => {
+    const cellValue = (v: PieceType): PieceType | ' ' => {
       return v !== 'n' ? v : ' ';
     };
 
-    return { cellValue, onClick };
+    return { cellValue, cellClick };
   }
 });
 </script>
+
+<style scoped>
+.base-btn {
+  display: block;
+  height: 50px;
+  width: 50px;
+  padding: 10px;
+  border: 1px solid black;
+  font-size: 30px;
+}
+
+::v-deep() .base-btn {
+  display: block;
+  height: 50px;
+  width: 50px;
+  padding: 10px;
+  border: 1px solid black;
+  font-size: 30px;
+}
+</style>

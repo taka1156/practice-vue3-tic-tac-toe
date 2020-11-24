@@ -1,6 +1,6 @@
 <template>
   <button type="button" class="base-btn" @click="onClick(pieceNo)">
-    <v-slot name="btn-label" />
+    <slot />
   </button>
 </template>
 
@@ -24,14 +24,5 @@ button {
   cursor: pointer;
   outline: none;
   margin: 0;
-}
-
-.base-btn {
-  display: block;
-  height: 50px;
-  width: 50px;
-  padding: 10px;
-  border: 1px solid black;
-  font-size: 30px;
 }
 </style>

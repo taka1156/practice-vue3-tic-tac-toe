@@ -1,9 +1,11 @@
 <template>
-  <button @click="init()">Start</button>
-  <p class="game-msg" v-show="state.msg !== ''">{{ state.msg }}</p>
-  <div v-if="state.pieces.length !== 0" class="game-frame">
-    <div v-for="(piece, index) in state.pieces" :key="`cell_${index}`">
-      <game-cell :piece-no="index" :piece-mark="piece" @on-click="writePlayer" />
+  <div>
+    <start-btn @start-click="init()"></start-btn>
+    <p class="game-msg" v-show="state.msg !== ''">{{ state.msg }}</p>
+    <div v-if="state.pieces.length !== 0" class="game-frame">
+      <div v-for="(piece, index) in state.pieces" :key="`cell_${index}`">
+        <game-cell :piece-no="index" :piece-mark="piece" @cell-click="writePlayer" />
+      </div>
     </div>
   </div>
 </template>
@@ -11,6 +13,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import { PieceType, PiecesType, GameStatusType, PlyerType } from '@/types/types';
+import StartBtn from '../molecules/StartBtn.vue';
 import GameCell from '../molecules/GameCell.vue';
 
 type FieldType = {
@@ -21,6 +24,7 @@ type FieldType = {
 export default defineComponent({
   name: 'GameFrame',
   components: {
+    'start-btn': StartBtn,
     'game-cell': GameCell
   },
   setup() {
