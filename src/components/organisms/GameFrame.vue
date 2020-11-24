@@ -1,7 +1,7 @@
 <template>
   <button @click="init()">Start</button>
   <p class="game-msg" v-show="state.msg !== ''">{{ state.msg }}</p>
-  <div v-if="state.pieces.length !== 0" class="game-flame">
+  <div v-if="state.pieces.length !== 0" class="game-frame">
     <div v-for="(piece, index) in state.pieces" :key="`cell_${index}`">
       <game-cell :piece-no="index" :piece-mark="piece" @on-click="writePlayer" />
     </div>
@@ -19,7 +19,7 @@ type FieldType = {
 };
 
 export default defineComponent({
-  name: 'GameFlame',
+  name: 'GameFrame',
   components: {
     'game-cell': GameCell
   },
@@ -109,7 +109,7 @@ export default defineComponent({
   color: black;
 }
 
-.game-flame {
+.game-frame {
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
