@@ -67,7 +67,7 @@ export default defineComponent({
       } else if (FILEDS[2] === piece && FILEDS[4] === piece && FILEDS[6] === piece) {
         return 'WIN';
       } else if (FILEDS.every(v => v !== 'n')) {
-        return 'DROW';
+        return 'DRAW';
       } else {
         return 'CONTINUE';
       }
@@ -77,9 +77,9 @@ export default defineComponent({
       if (result === 'CONTINUE') {
         state.gameStatus = 'CONTINUE';
         return;
-      } else if (result === 'DROW') {
-        state.gameStatus = 'DROW';
-        state.msg = 'DROW';
+      } else if (result === 'DRAW') {
+        state.gameStatus = 'DRAW';
+        state.msg = 'DRAW';
       } else {
         state.gameStatus = 'WIN';
         state.msg = `${player} WIN`;
@@ -97,6 +97,8 @@ export default defineComponent({
     };
 
     const writeCom = (): number => {
+      // すでに勝敗が決まっていたら行わない
+      if (state.gameStatus === 'WIN' || state.gameStatus === 'DRAW') return -1;
       // 'n' => 未入力の要素の添字のみに絞り込む (あとでミニマックスに変えるかも)
       const FILEDS_INDEX: number[] = [...state.pieces].reduce(
         (arr: number[], v, i) => {
@@ -114,7 +116,10 @@ export default defineComponent({
 
     const writePlayer = (index: number): void => {
       writePiece(index, '○', 'USER');
-      writePiece(writeCom(), '×', 'COM');
+      const COM_INDEX = writeCom();
+      if (COM_INDEX !== -1) {
+        writePiece(COM_INDEX, '×', 'COM');
+      }
     };
 
     return { state, init, writePlayer };

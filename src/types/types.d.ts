@@ -2,7 +2,7 @@ type PieceType = '○' | '×' | 'n';
 
 type PiecesType = PieceType[];
 
-type GameStatusType = 'INIT' | 'CONTINUE' | 'WIN' | 'DROW';
+type GameStatusType = 'INIT' | 'CONTINUE' | 'WIN' | 'DRAW';
 
 type PlayerType = 'USER' | 'COM';
 
