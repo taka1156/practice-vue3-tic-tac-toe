@@ -1,6 +1,6 @@
 <template>
   <div>
-    <start-btn @start-click="init" />
+    <select-piece-modal @modal-click="init" />
     <div class="msg-box">
       <p class="game-msg" v-show="state.msg !== ''">{{ state.msg }}</p>
     </div>
@@ -19,33 +19,49 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
-import { PieceType, PiecesType, GameStatusType, PlayerType } from '@/types/types';
-import StartBtn from '../molecules/StartBtn.vue';
+import {
+  PieceType,
+  PiecesType,
+  GameStatusType,
+  PlayerType,
+  PlayerInfoType
+} from '@/types/types';
 import CellBtn from '../molecules/CellBtn.vue';
+import SelectPieceModal from '../organisms/SelectPieceModal.vue';
 
 type FieldType = {
   pieces: PiecesType;
-  gameStatus: GameStatusType;
+  user: PlayerInfoType;
+  com: PlayerInfoType;
+  gameStatus: GameStatusType | '';
   msg: string;
 };
 
 export default defineComponent({
   name: 'GameFrame',
   components: {
-    'start-btn': StartBtn,
+    'select-piece-modal': SelectPieceModal,
     'cell-btn': CellBtn
   },
   setup() {
     const state = reactive<FieldType>({
       pieces: [],
-      gameStatus: 'INIT',
+      user: { player: 'USER', piece: '' },
+      com: { player: 'COM', piece: '' },
+      gameStatus: '',
       msg: ''
     });
 
-    const init = (): void => {
+    const Setting = (userSeletct: PieceType) => {
+      state.user.piece = userSeletct;
+      state.com.piece = userSeletct === '○' ? '×' : '○';
+    };
+
+    const init = (userSelect: PieceType): void => {
+      Setting(userSelect);
       state.gameStatus = 'INIT';
       state.msg = '';
-      state.pieces = new Array(9).fill('n');
+      state.pieces = new Array(9).fill('');
     };
 
     const judgeGameStatus = (piece: PieceType): GameStatusType => {
@@ -66,7 +82,7 @@ export default defineComponent({
         return 'WIN';
       } else if (FILEDS[2] === piece && FILEDS[4] === piece && FILEDS[6] === piece) {
         return 'WIN';
-      } else if (FILEDS.every(v => v !== 'n')) {
+      } else if (FILEDS.every(v => v !== '')) {
         return 'DRAW';
       } else {
         return 'CONTINUE';
@@ -87,21 +103,21 @@ export default defineComponent({
 
     const writePiece = (
       index: number,
-      piece: PieceType,
-      player: PlayerType
+      player: PlayerType,
+      piece: PieceType
     ): void => {
       state.pieces[index] = piece;
       const RESULT = judgeGameStatus(piece);
       generateMsg(RESULT, player);
     };
 
-    const writeCom = (): number => {
+    const rand = (): number => {
       // すでに勝敗が決まっていたら行わない
       if (state.gameStatus === 'WIN' || state.gameStatus === 'DRAW') return -1;
       // 'n' => 未入力の要素の添字のみに絞り込む (あとでミニマックスに変えるかも)
       const FILEDS_INDEX: number[] = [...state.pieces].reduce(
         (arr: number[], v, i) => {
-          if (v === 'n') {
+          if (v === '') {
             arr.push(i);
           }
           return arr;
@@ -113,12 +129,18 @@ export default defineComponent({
       return FILEDS_INDEX[Math.floor(Math.random() * FILEDS_INDEX.length)];
     };
 
-    const writePlayer = (index: number): void => {
-      writePiece(index, '○', 'USER');
-      const COM_INDEX = writeCom();
-      if (COM_INDEX !== -1) {
-        writePiece(COM_INDEX, '×', 'COM');
+    const writeCom = (): void => {
+      const comWriteIndex = rand();
+      const com = state.com;
+      if (comWriteIndex !== -1) {
+        writePiece(comWriteIndex, com.player, com.piece);
       }
+    };
+
+    const writePlayer = (index: number): void => {
+      const user = state.user;
+      writePiece(index, user.player, user.piece);
+      writeCom();
     };
 
     return { state, init, writePlayer };

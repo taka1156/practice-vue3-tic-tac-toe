@@ -24,5 +24,7 @@ button {
   cursor: pointer;
   outline: none;
   margin: 0;
+  padding: 0;
+  background-color: transparent;
 }
 </style>

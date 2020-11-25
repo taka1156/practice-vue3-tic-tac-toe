@@ -1,4 +1,4 @@
-type PieceType = '○' | '×' | 'n';
+type PieceType = '○' | '×' | '';
 
 type PiecesType = PieceType[];
 
@@ -6,4 +6,9 @@ type GameStatusType = 'INIT' | 'CONTINUE' | 'WIN' | 'DRAW';
 
 type PlayerType = 'USER' | 'COM';
 
-export { GameStatusType, PlayerType, PieceType, PiecesType };
+type PlayerInfoType = {
+  player: PlayerType;
+  piece: PieceType;
+};
+
+export { GameStatusType, PlayerType, PieceType, PiecesType, PlayerInfoType };
