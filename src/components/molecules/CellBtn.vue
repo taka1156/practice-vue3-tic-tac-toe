@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="cell-btn">
     <base-btn @btn-click="cellClick()">
       {{ cellValue(pieceMark) }}
     </base-btn>
@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent, SetupContext, PropType } from 'vue';
-import { PieceType } from '@/types/types.d.ts';
+import { GameStatusType, PieceType } from '@/types/types.d.ts';
 import BaseBtn from '../atoms/BaseBtn.vue';
 
 export default defineComponent({
@@ -17,11 +17,18 @@ export default defineComponent({
     'base-btn': BaseBtn
   },
   props: {
+    gameStatus: String as PropType<GameStatusType>,
     pieceNo: Number as PropType<number>,
     pieceMark: String as PropType<PieceType>
   },
   setup(props, context: SetupContext) {
     const cellClick = (): void => {
+      if (
+        props.gameStatus === 'WIN' ||
+        props.gameStatus === 'DROW' ||
+        props.pieceMark !== 'n'
+      )
+        return;
       context.emit('cell-click', props.pieceNo);
     };
 
@@ -42,5 +49,10 @@ export default defineComponent({
   padding: 10px;
   border: 1px solid black;
   font-size: 30px;
+}
+
+.cell-btn {
+  height: 50px;
+  width: 50px;
 }
 </style>

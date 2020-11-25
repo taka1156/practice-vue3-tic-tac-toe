@@ -4,6 +4,6 @@ type PiecesType = PieceType[];
 
 type GameStatusType = 'INIT' | 'CONTINUE' | 'WIN' | 'DROW';
 
-type PlyerType = 'USER' | 'COM';
+type PlayerType = 'USER' | 'COM';
 
-export { GameStatusType, PlyerType, PieceType, PiecesType };
+export { GameStatusType, PlayerType, PieceType, PiecesType };

@@ -9,7 +9,7 @@ import { defineComponent, SetupContext } from 'vue';
 
 export default defineComponent({
   name: 'BaseBtn',
-  setup(context: SetupContext) {
+  setup(props, context: SetupContext) {
     const btnClick = (): void => {
       context.emit('btn-click');
     };

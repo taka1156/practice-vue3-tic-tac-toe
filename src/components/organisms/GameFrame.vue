@@ -1,12 +1,17 @@
 <template>
   <div>
-    <base-btn @btn-click="init()">
-      Start
-    </base-btn>
-    <p class="game-msg" v-show="state.msg !== ''">{{ state.msg }}</p>
+    <start-btn @start-click="init" />
+    <div class="msg-box">
+      <p class="game-msg" v-show="state.msg !== ''">{{ state.msg }}</p>
+    </div>
     <div v-if="state.pieces.length !== 0" class="game-frame">
       <div v-for="(piece, index) in state.pieces" :key="`cell_${index}`">
-        <cell-btn :piece-no="index" :piece-mark="piece" @cell-click="writePlayer" />
+        <cell-btn
+          :game-status="state.gameStatus"
+          :piece-no="index"
+          :piece-mark="piece"
+          @cell-click="writePlayer"
+        />
       </div>
     </div>
   </div>
@@ -14,37 +19,38 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
-import { PieceType, PiecesType, GameStatusType, PlyerType } from '@/types/types';
-import BaseBtn from '../atoms/BaseBtn.vue';
+import { PieceType, PiecesType, GameStatusType, PlayerType } from '@/types/types';
+import StartBtn from '../molecules/StartBtn.vue';
 import CellBtn from '../molecules/CellBtn.vue';
 
 type FieldType = {
   pieces: PiecesType;
+  gameStatus: GameStatusType;
   msg: string;
 };
 
 export default defineComponent({
   name: 'GameFrame',
   components: {
-    'base-btn': BaseBtn,
+    'start-btn': StartBtn,
     'cell-btn': CellBtn
   },
   setup() {
     const state = reactive<FieldType>({
       pieces: [],
+      gameStatus: 'INIT',
       msg: ''
     });
 
     const init = (): void => {
-      console.log('start');
+      state.gameStatus = 'INIT';
+      state.msg = '';
       state.pieces = new Array(9).fill('n');
     };
 
     const judgeGameStatus = (piece: PieceType): GameStatusType => {
-      const FILEDS: string[] = [...state.pieces];
-      if (FILEDS.every(v => v !== 'n')) {
-        return 'DROW'; // 盤面を全部見なくていい
-      } else if (FILEDS[0] === piece && FILEDS[1] === piece && FILEDS[2] === piece) {
+      const FILEDS: string[] = state.pieces;
+      if (FILEDS[0] === piece && FILEDS[1] === piece && FILEDS[2] === piece) {
         return 'WIN';
       } else if (FILEDS[3] === piece && FILEDS[4] === piece && FILEDS[5] === piece) {
         return 'WIN';
@@ -60,17 +66,22 @@ export default defineComponent({
         return 'WIN';
       } else if (FILEDS[2] === piece && FILEDS[4] === piece && FILEDS[6] === piece) {
         return 'WIN';
+      } else if (FILEDS.every(v => v !== 'n')) {
+        return 'DROW';
       } else {
         return 'CONTINUE';
       }
     };
 
-    const generateMsg = (result: GameStatusType, player: PlyerType): void => {
+    const generateMsg = (result: GameStatusType, player: PlayerType): void => {
       if (result === 'CONTINUE') {
+        state.gameStatus = 'CONTINUE';
         return;
       } else if (result === 'DROW') {
+        state.gameStatus = 'DROW';
         state.msg = 'DROW';
       } else {
+        state.gameStatus = 'WIN';
         state.msg = `${player} WIN`;
       }
     };
@@ -78,7 +89,7 @@ export default defineComponent({
     const writePiece = (
       index: number,
       piece: PieceType,
-      player: PlyerType
+      player: PlayerType
     ): void => {
       state.pieces[index] = piece;
       const RESULT = judgeGameStatus(piece);
@@ -112,24 +123,24 @@ export default defineComponent({
 </script>
 
 <style scoped>
-::v-deep() .base-btn {
+.msg-box {
   display: block;
-  margin: 0 auto;
-  height: 50px;
-  width: 150px;
-  padding: 10px;
-  border: 1px solid black;
-  font-size: 30px;
+  margin: 5px auto;
+  padding: 0;
+  height: 20px;
+  width: 80px;
 }
 
 .game-msg {
+  margin: 0;
+  padding: 0;
   color: black;
 }
 
 .game-frame {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 auto;
+  margin: 10px auto;
   padding: 0;
   height: 150px;
   width: 150px;
