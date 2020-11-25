@@ -76,7 +76,6 @@ export default defineComponent({
     const generateMsg = (result: GameStatusType, player: PlayerType): void => {
       if (result === 'CONTINUE') {
         state.gameStatus = 'CONTINUE';
-        return;
       } else if (result === 'DRAW') {
         state.gameStatus = 'DRAW';
         state.msg = 'DRAW';
