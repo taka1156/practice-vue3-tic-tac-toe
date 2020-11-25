@@ -23,9 +23,10 @@ export default defineComponent({
   },
   setup(props, context: SetupContext) {
     const cellClick = (): void => {
+      // 勝敗が決まっている、すでに値がある場合はイベントを伝えない
       if (
         props.gameStatus === 'WIN' ||
-        props.gameStatus === 'DROW' ||
+        props.gameStatus === 'DRAW' ||
         props.pieceMark !== 'n'
       )
         return;
